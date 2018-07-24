@@ -35,7 +35,7 @@ class YouTube():
                 _tries += 1
 
         except requests.ConnectionError as e:
-            print('ERROR : CONNECTION ERROR')
+            raise ValueError(1)
             
 
         try:
@@ -45,12 +45,7 @@ class YouTube():
             else:
                 _ret = -1
         except Exception as e:
-            print('-------')
-            print(_ret)
-            print(_ret['items'])
-            print(type(_ret['items']))
-            print(len(_ret['items']))
-            exit()
+            raise ValueError(2)
 
         return _ret #returns in ISO 8601 format
 
@@ -98,14 +93,7 @@ class YouTube():
                             _seconds = int(code[2:])
 
         except Exception as e:
-            print('---in iso trans----')
-            print(e)
-            print('code:'+code)
-            print(_h_idx)
-            print(_m_idx)
-            print(_s_idx)
-            print()
-            exit()
+            raise ValueError(3)
             
 
 
