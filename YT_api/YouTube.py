@@ -36,6 +36,7 @@ class YouTube():
 
         except requests.ConnectionError as e:
             print('ERROR : CONNECTION ERROR')
+            
 
         try:
             _ret = json.loads(response.content)
