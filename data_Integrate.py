@@ -13,13 +13,20 @@ def data_merge(fpath):#fpath : ...../NDSC/datasets/
     
 
     df_ver1 = pd.concat(pieces, ignore_index = True)
+    df_ver1.to_csv('./DATA.csv')
+
     return df_ver1 
 
 
 if __name__ == '__main__':
 
+
+    
     _cur_dir = os.path.abspath('.')+'/datasets'
     dataset_df = data_merge(_cur_dir)
+
+
+    '''
 
     _views = dataset_df['views']
     sorted_Series_by_view = _views.sort_values()
@@ -49,6 +56,7 @@ if __name__ == '__main__':
     
 
 
+    '''
 
 
     

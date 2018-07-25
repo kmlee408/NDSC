@@ -104,10 +104,21 @@ class YouTube():
         _duration_iso8601 = self._get_ContentDetails(_vid,'duration')
         print(_duration_iso8601)
 
-        if _duration_iso8601 != -1:
-            _duration_seconds = self._iso8601_to_seconds(_duration_iso8601)
-        else:
-            _duration_seconds = 0
+        try:
+            if _duration_iso8601 != -1:
+                _duration_seconds = self._iso8601_to_seconds(_duration_iso8601)
+            else:
+                _duration_seconds = 0
+        except ValueError as ve:
+            _duration_seconds = -1
+            '''
+            if ve.args[0] == 1:
+                _duration_seconds
+            elif ve.args[0] == 2:
+
+            elif ve.args[0] == 3:
+                _duration_seconds = -1
+            '''
 
         return _duration_seconds
 
