@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import datetime
 import multiprocessing as mp
 _sys_add_path = os.path.abspath('../YT_api')
 sys.path.insert(1,_sys_add_path)
@@ -156,6 +157,18 @@ def get_df_sorted_by_values(dataframe, _by='views'):
 
     return _dataframe
 
+
+def to_epoch(real_time):
+
+    stime = "%s/%s/%s" %(real_time[8:10], real_time[5:7], real_time[0:4])
+    sec = int(real_time[11:13])*60*60 + int(real_time[14:16])*60 +int(real_time[17:19])
+
+    unixday = time.mktime(datetime.datetime.strptime(stime, "%d/%m/%Y").timetuple())
+    unixtime = int(unixday + sec)
+    return unixtime
+
+
+
 def group_by_categoryid(dataframe):
     #_min_categoryid = min(int(dataframe['category_id']))
     #_max_categoryid = max(int(dataframe['category_id']))
@@ -240,4 +253,25 @@ def make_graph(dataframe, column_name):
     
 
 
+
+def drop_not_ints(dataframe, feat):
+    '''
+        dataframe의 feat특성열의 값 중에 -1인 값을 찾아서 해당 행을 제거한 dataframe을 리턴 
+    '''
+    def _to_ints(val):
+        try:
+            v = int(val)
+        except ValueError:
+            return -1
+        else:
+            return v
+
+    _idx_of_rows_to_delete = pd.Series(list(map(_to_ints, dataframe[feat])))
+
+    _d_idx = _idx_of_rows_to_delete[_idx_of_rows_to_delete == -1].index
+    
+    return dataframe.drop(_d_idx)
+
+def get_merged_dataframe_by_columns(list_of_dataframes):
+    return pd.concat(list_of_dataframes, axis=1)
 
