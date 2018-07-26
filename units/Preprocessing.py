@@ -169,6 +169,71 @@ def group_by_duration(dataframe):
     _max_duration = max(int(dataframe['duration']))
 
     _div = (_max_duration - _min_duration) / 9 #levels
+    
+    
+
+    
+def make_grade_columns(dataframe):
+    '''
+    데이터프레임 등급 매기기 모듈
+    'Grade' 칼럼 붙여서 return
+    
+    '''
+    
+    df = get_df_sorted_by_values(dataframe)
+    
+    _len = len(df)
+    #percentage of level 9 ~ 1
+    _pct = [0.04, 0.07, 0.12, 0.17, 0.20, 0.17, 0.12, 0.07, 0.04]
+
+    #list of ( no. of datapoints in level9 ~ 1 )
+    _dps_cnts_levels = [ int(_len * pct) +1 for pct in _pct ]
+    _st = 0
+    Count = 9
+    for vcnt in _dps_cnts_levels:
+
+        _et = _st + vcnt
+        df.loc[_st:_et, 'Grade'] = str(Count)+' grade'
+
+        Count= Count -1
+        _st = _et
+
+    return df
+
+
+def make_graph(dataframe, column_name):
+    '''
+    DataFrame과 값을 알 고싶은 Column 이름을 쓰셈
+    그럼 그래프랑 등급컷 산출됨!
+    numeric columns = ['views','likes','dislikes','category_id','comment_count','duration']
+    '''
+
+    df_ = dataframe.reset_index()
+    graph = sns.lmplot(data = df_ , x='index', y=column_name, hue ='Grade', fit_reg=False, size= 8)   
+    # fit_reg = 회귀선 표기할꺼냐
+    # hue = 구분하는 기준을 뭘로 할꺼냐
+    
+    print(column_name + ' Graph')
+    
+    
+    # 등급별 평균값 산출
+    _pct = [0.04, 0.07, 0.12, 0.17, 0.20, 0.17, 0.12, 0.07]
+    _len=len(dataframe)
+    _dps_cnts_levels = [ int(_len * pct) +1 for pct in _pct ]
+    
+    _st= 0
+    Count = 8
+    for vcnt in _dps_cnts_levels:
+        
+        _et = _st + vcnt
+        print(Count , ' 등급 별 평균 값 : %d' % (sum(df_.loc[_st:_et,column_name])/(_et-_st)))
+        Count= Count -1
+        _st = _et
+    
+    print('\n')
+    
+    return graph
+    
 
 
 
