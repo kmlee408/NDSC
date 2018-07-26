@@ -8,6 +8,9 @@ sys.path.insert(1,_sys_add_path)
 import pandas as pd
 import YouTube
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 def _runner_get_duration(yt,vid_list):
     print('Process Started')
     _duration = []
@@ -144,6 +147,7 @@ def get_df_sorted_by_values(dataframe, _by='views'):
     '''
     returns a dataframe that is sorted by number of views
     '''
+    dataframe[_by].astype(np.int64)
 
     _len_dataframe = len(dataframe)
 
