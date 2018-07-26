@@ -175,7 +175,7 @@ def group_by_duration(dataframe):
     
 def make_grade_columns(dataframe):
     '''
-    데이터프레임 등급 매기기 모듈
+    데이터프레임 등급 매기기 모듈임 (굿)
     'Grade' 칼럼 붙여서 return
     
     '''
@@ -204,7 +204,7 @@ def make_grade_columns(dataframe):
 def make_graph(dataframe, column_name):
     '''
     DataFrame과 값을 알 고싶은 Column 이름을 쓰셈
-    그럼 그래프랑 등급컷 산출됨!
+    그럼 그래프랑 등급별 평균 산출됨!
     numeric columns = ['views','likes','dislikes','category_id','comment_count','duration']
     '''
 
