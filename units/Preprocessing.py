@@ -291,7 +291,7 @@ def time_devide(df):
     return df
 
 
-def sentiment_analysis(df,col)
+def sentiment_analysis(df,col):
     '''    
     from textblob import TextBlob
     
