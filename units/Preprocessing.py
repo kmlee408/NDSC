@@ -43,8 +43,11 @@ def data_format(dataframe):
     print('formating....')
     
     df_ver2 = make_grade_columns(dataframe) # 등급 매기기
+    print('Grade format complete')
     df_ver3 = sentiment_analysis(df_ver2 , 'description') # 감정 분석
+    print('Sentiment format complete')
     df_ver4 = time_devide(df_ver3) # 시간 6개 구간으로 나눔
+    print('Time devide format complete')
     
     return df_ver4
 
