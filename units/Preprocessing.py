@@ -278,6 +278,9 @@ def get_merged_dataframe_by_columns(list_of_dataframes):
     return pd.concat(list_of_dataframes, axis=1)
 
 def time_devide(df):
+    '''
+    시간을 6가지 등급으로 나누어 column 생성해서 값넣고 return
+    '''
     
     for i in range(len(df)): 
         
@@ -285,4 +288,26 @@ def time_devide(df):
         val =  int(time_devide / 4 ) + 1
         df['publish_time_devide'][i] = val
        
+    return df
+
+
+def sentiment_analysis(df,col)
+    '''    
+    from textblob import TextBlob
+    
+    Dataframe과 column 이름을 넣어주면, 해당 column의 text 감성을 분석 하여 (긍정(1), 부정(-1))
+    'senti_mark'라는 column을 생성한 뒤 값 넣음
+    
+    '''
+    for i in range(len(df)):
+
+        text = df.loc[i,col]
+        try:
+            wiki = TextBlob(text)
+        except:
+            continue
+
+        mark = wiki.sentiment.polarity
+        df.loc[i,'senti_mark'] = mark
+        
     return df
