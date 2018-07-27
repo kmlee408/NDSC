@@ -27,17 +27,20 @@ def _runner_get_duration(yt,vid_list):
             
     return (_duration, _errors_vid_numbers)
 #-------------------------------------------------------------------------
-def ata_format(dataframe):
+def data_format(dataframe):
 
     '''
     csv 파일을 dataframe한 df_ver1 을 input함
     전체 전처리 모듈임 이것만 실행하면 됨
     '''
     
+    dataframe = drop_not_ints(dataframe, 'views')
+    dataframe = drop_not_ints(dataframe, 'likes')
+    dataframe['views'] = dataframe['views'].astype('int64')
     dataframe['likes'] = dataframe['likes'].astype('int64')
-    dataframe[_by] = dataframe[_by].astype('int64')
     del dataframe['Unnamed: 17']
     del dataframe['Unnamed: 18']
+    print('formating....')
     
     df_ver2 = make_grade_columns(dataframe) # 등급 매기기
     df_ver3 = sentiment_analysis(df_ver2 , 'description') # 감정 분석
