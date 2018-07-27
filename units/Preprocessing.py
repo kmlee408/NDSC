@@ -6,6 +6,7 @@ import multiprocessing as mp
 _sys_add_path = os.path.abspath('../YT_api')
 sys.path.insert(1,_sys_add_path)
 
+import numpy as np
 import pandas as pd
 import YouTube
 
@@ -148,11 +149,11 @@ def get_df_sorted_by_values(dataframe, _by='views'):
     '''
     returns a dataframe that is sorted by number of views
     '''
-    dataframe[_by].astype(np.int64)
+    dataframe[_by] = dataframe[_by].astype('int64')
 
     _len_dataframe = len(dataframe)
 
-    _dataframe = dataframe.sort_values(by=[_by])
+    _dataframe = dataframe.sort_values(by=[_by],ascending=True)
     _dataframe.index = range(_len_dataframe)
 
     return _dataframe
