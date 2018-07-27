@@ -198,6 +198,7 @@ def make_grade_columns(dataframe):
     
     '''
     dataframe = drop_not_ints(dataframe, 'views')
+    dataframe['likes'] = dataframe['likes'].astype('int64')
     df = get_df_sorted_by_values(dataframe)
     
     _len = len(df)
