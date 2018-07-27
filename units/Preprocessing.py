@@ -197,7 +197,7 @@ def make_grade_columns(dataframe):
     'Grade' 칼럼 붙여서 return
     
     '''
-    
+    dataframe = drop_not_ints(dataframe, 'views')
     df = get_df_sorted_by_values(dataframe)
     
     _len = len(df)
@@ -276,3 +276,12 @@ def drop_not_ints(dataframe, feat):
 def get_merged_dataframe_by_columns(list_of_dataframes):
     return pd.concat(list_of_dataframes, axis=1)
 
+def time_devide(df):
+    
+    for i in range(len(df)): 
+        
+        time_devide = int(df.loc[i,'publish_time'][11:13])
+        val =  int(time_devide / 4 ) + 1
+        df['publish_time_devide'][i] = val
+       
+    return df
