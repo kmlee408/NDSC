@@ -12,6 +12,7 @@ import YouTube
 
 import matplotlib.pyplot as plt
 import seaborn as sns
+from textblob import TextBlob
 
 def _runner_get_duration(yt,vid_list):
     print('Process Started')
@@ -25,6 +26,27 @@ def _runner_get_duration(yt,vid_list):
         _duration.append(_vid_len)
             
     return (_duration, _errors_vid_numbers)
+#-------------------------------------------------------------------------
+def ata_format(dataframe):
+
+    '''
+    csv 파일을 dataframe한 df_ver1 을 input함
+    전체 전처리 모듈임 이것만 실행하면 됨
+    '''
+    
+    dataframe['likes'] = dataframe['likes'].astype('int64')
+    dataframe[_by] = dataframe[_by].astype('int64')
+    del dataframe['Unnamed: 17']
+    del dataframe['Unnamed: 18']
+    
+    df_ver2 = make_grade_columns(dataframe) # 등급 매기기
+    df_ver3 = sentiment_analysis(df_ver2 , 'description') # 감정 분석
+    df_ver4 = time_devide(df_ver3) # 시간 6개 구간으로 나눔
+    
+    return df_ver4
+
+#--------------------------------------------------------------------------
+
 
 def get_video_len(fpath, multi=0):
     
@@ -149,8 +171,6 @@ def get_df_sorted_by_values(dataframe, _by='views'):
     '''
     returns a dataframe that is sorted by number of views
     '''
-    dataframe[_by] = dataframe[_by].astype('int64')
-
     _len_dataframe = len(dataframe)
 
     _dataframe = dataframe.sort_values(by=[_by],ascending=True)
@@ -198,7 +218,6 @@ def make_grade_columns(dataframe):
     
     '''
     dataframe = drop_not_ints(dataframe, 'views')
-    dataframe['likes'] = dataframe['likes'].astype('int64')
     df = get_df_sorted_by_values(dataframe)
     
     _len = len(df)
@@ -281,14 +300,14 @@ def time_devide(df):
     '''
     시간을 6가지 등급으로 나누어 column 생성해서 값넣고 return
     '''
-    
-    for i in range(len(df)): 
+    df_ = df
+    for i in range(len(df_)): 
         
-        time_devide = int(df.loc[i,'publish_time'][11:13])
+        time_devide = int(df_.loc[i,'publish_time'][11:13])
         val =  int(time_devide / 4 ) + 1
-        df['publish_time_devide'][i] = val
+        df_.loc[i,'publish_time_devide'] = val
        
-    return df
+    return df_
 
 
 def sentiment_analysis(df,col):
@@ -299,15 +318,17 @@ def sentiment_analysis(df,col):
     'senti_mark'라는 column을 생성한 뒤 값 넣음
     
     '''
-    for i in range(len(df)):
+    df_ = df
+    for i in range(len(df_)):
 
-        text = df.loc[i,col]
+        text = df_.loc[i,col]
         try:
             wiki = TextBlob(text)
         except:
             continue
 
         mark = wiki.sentiment.polarity
-        df.loc[i,'senti_mark'] = mark
+        df_.loc[i,'senti_mark'] = mark
         
-    return df
+    return df_
+ 
