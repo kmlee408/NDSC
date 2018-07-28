@@ -29,27 +29,29 @@ def _runner_get_duration(yt,vid_list):
 #-------------------------------------------------------------------------
 def data_format(dataframe):
 
-    '''
-    csv 파일을 dataframe한 df_ver1 을 input함
-    전체 전처리 모듈임 이것만 실행하면 됨
-    '''
-    
     dataframe = drop_not_ints(dataframe, 'views')
     dataframe = drop_not_ints(dataframe, 'likes')
     dataframe['views'] = dataframe['views'].astype('int64')
     dataframe['likes'] = dataframe['likes'].astype('int64')
     del dataframe['Unnamed: 17']
     del dataframe['Unnamed: 18']
+    dataframe = dataframe.reset_index(drop=True)
     print('formating....')
     
-    df_ver2 = make_grade_columns(dataframe) # 등급 매기기
-    print('Grade format complete')
+   
+    df_ver2 = gap_time(dataframe) # 올린지 얼마만에 인기동영상이 됐는지
+    print('gap_time format complete')
     df_ver3 = sentiment_analysis(df_ver2 , 'description') # 감정 분석
     print('Sentiment format complete')
     df_ver4 = time_devide(df_ver3) # 시간 6개 구간으로 나눔
     print('Time devide format complete')
+    df_ver5 = make_grade_columns(df_ver4) # 등급 매기기
+    print('Grade format complete')
+    df_ver6 = col_del(df_ver5) # 불필요한 feature 제거
+    print('Delete col complete')
     
-    return df_ver4
+    
+    return df_ver6
 
 #--------------------------------------------------------------------------
 
@@ -350,4 +352,18 @@ def one_hot_encoding(df,cols):
         df_ = pd.concat([df_, pd.get_dummies(df_[col], prefix = col)], axis = 1)
         df_ = df_.drop(col, axis = 1)
         
+    return df_
+
+def col_del(df):
+    
+    df_=df
+    cols = ['video_id','trending_date','title','tags','publish_time','description','channel_title','thumbnail_link','comments_disabled','ratings_disabled','video_error_or_removed'] 
+
+    for col in cols:
+
+        try:
+            del df_[col]
+        except:
+            continue
+            
     return df_
