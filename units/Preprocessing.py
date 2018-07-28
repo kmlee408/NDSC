@@ -423,3 +423,20 @@ def col_del(df):
             continue
             
     return df_
+
+def gap_time(df):
+    
+    df_ = df
+    for i in range(len(df_)):
+
+        trend = '20'+df_.loc[i,'trending_date']
+        trend_date = datetime.datetime.strptime(trend, "%Y.%d.%m")
+        trend_epoch = time.mktime(trend_date.timetuple())
+
+        pub_date= datetime.datetime.strptime(df_.loc[i,'publish_time'][:-13], '%Y-%m-%dT')
+        pub_epoch = time.mktime(pub_date.timetuple())
+        
+        gap = trend_epoch - pub_epoch
+        df_.loc[i,'gap_time'] = gap
+
+    return df_
