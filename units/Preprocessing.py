@@ -343,10 +343,11 @@ def sentiment_analysis(df,col):
 def one_hot_encoding(df,cols):
     '''
     Dataframe이랑 원핫인코딩 할 column 이름 넣으면, 기존 column은 없어지고 인코딩된 column 생성
+    중요한건 cols 가 list타입의 columns name이여야함 ex) cols =['category_id','publish_time_devide']
     '''   
     df_ = df
     for col in cols:
-        df_ = pd.concat([df_, pd.get_dummies(data[column], prefix = col)], axis = 1)
+        df_ = pd.concat([df_, pd.get_dummies(df_[col], prefix = col)], axis = 1)
         df_ = df_.drop(col, axis = 1)
         
     return df_
