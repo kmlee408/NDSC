@@ -39,7 +39,8 @@ def data_format(dataframe):
     del dataframe['Unnamed: 18']
     dataframe = dataframe.reset_index(drop=True)
     print('formating....')
-   
+     
+    
     df_ver2 = gap_time(dataframe) # 올린지 얼마만에 인기동영상이 됐는지
     print('gap_time format complete')
     df_ver3 = sentiment_analysis(df_ver2 , 'description') # 감정 분석
@@ -124,8 +125,8 @@ def merge_data():
     '''
     ver1 데이터프레임을 1개의 데이터프레임으로 합쳐서 리턴 
     '''
-    _dir = os.path.abspath('..')+'/datasets/datasets_ver1/'
-    _file_names = ['CAvideos','GBvideos','USvideos']
+    _dir = os.path.abspath('.')+'/datasets/datasets_ver1/'
+    _file_names = ['CAvideos','GEvideos','USvideos']
 
     _pieces = []
     for fn in _file_names:
