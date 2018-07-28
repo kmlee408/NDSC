@@ -37,16 +37,22 @@ def data_format(dataframe):
     dataframe['likes'] = dataframe['likes'].astype('int64')
     del dataframe['Unnamed: 17']
     del dataframe['Unnamed: 18']
+    dataframe = dataframe.reset_index(drop=True)
     print('formating....')
    
-    df_ver2 = make_grade_columns(dataframe) # 등급 매기기
-    print('Grade format complete')
+    df_ver2 = gap_time(dataframe) # 올린지 얼마만에 인기동영상이 됐는지
+    print('gap_time format complete')
     df_ver3 = sentiment_analysis(df_ver2 , 'description') # 감정 분석
     print('Sentiment format complete')
     df_ver4 = time_devide(df_ver3) # 시간 6개 구간으로 나눔
     print('Time devide format complete')
-   
-    return df_ver4
+    df_ver5 = make_grade_columns(df_ver4) # 등급 매기기
+    print('Grade format complete')
+    df_ver6 = col_del(df_ver5) # 불필요한 feature 제거
+    print('Delete col complete')
+    
+    
+    return df_ver6
 
 
 def get_video_len(fpath, multi=0):
@@ -388,6 +394,7 @@ def one_hot_encoding(df,cols):
         
     return df_
 
+<<<<<<< HEAD
 
 def categorize_dataset_by_grade(dataframe):
     grades_feature = []
@@ -404,3 +411,18 @@ def get_feature_values_in_grade(dataframe, feature, grade):
     return ret_values
 
 
+=======
+def col_del(df):
+    
+    df_=df
+    cols = ['video_id','trending_date','title','tags','publish_time','description','channel_title','thumbnail_link','comments_disabled','ratings_disabled','video_error_or_removed'] 
+
+    for col in cols:
+
+        try:
+            del df_[col]
+        except:
+            continue
+            
+    return df_
+>>>>>>> 3fd51681fe5ff6e78e92a13afc87667c3d7d8bf5
