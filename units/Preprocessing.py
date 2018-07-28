@@ -49,15 +49,17 @@ def data_format(dataframe):
     print('Time devide format complete')
     
     cols =['category_id','publish_time_devide']
-    df_ver5 = one_hot_encoding(df_ver4, cols)
+    df_ver5 = one_hot_encoding(df_ver4, cols) # 원 핫 인코딩
     print('one-hot-encoding is complete')
-    df_ver6 = topic_find(df_ver5)
+    df_ver6 = topic_find(df_ver5) # 제목이랑 태그에서 키워드 추출
     print('Title,Tags topic Find is complete')
     df_ver7 = make_grade_columns(df_ver6) # 등급 매기기
     print('Grade format complete')
+    
+    #cleaning data
     df_ver8 = col_del(df_ver7) # 불필요한 feature 제거
     print('Delete col complete')
-    df_ver9 =df_ver8.dropna()
+    df_ver9 =df_ver8.dropna() #nan 
     
     return df_ver9
 
