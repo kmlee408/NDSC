@@ -440,3 +440,19 @@ def gap_time(df):
         df_.loc[i,'gap_time'] = gap
 
     return df_
+
+def SelectKBest(df):
+    '''
+    format data후 DataFrame 넣으면 Grade와의 분산 분석한다. 분산의 정도가 유사한 1등부터 차례대로 나열
+    '''
+    df_= df.dropna()
+
+    X, y = df_.iloc[:,0:9], df_.iloc[:,9:10]
+
+    for k in range(1,10):
+
+        X_new = SelectKBest(f_classif, k=k).fit(X, y)
+        SFcolumns=X_new.get_support(indices=True)    
+
+        print(k ,'등' ,df_.columns[SFcolumns])
+        
