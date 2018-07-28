@@ -47,13 +47,19 @@ def data_format(dataframe):
     print('Sentiment format complete')
     df_ver4 = time_devide(df_ver3) # 시간 6개 구간으로 나눔
     print('Time devide format complete')
-    df_ver5 = make_grade_columns(df_ver4) # 등급 매기기
+    
+    cols =['category_id','publish_time_devide']
+    df_ver5 = one_hot_encoding(df_ver4, cols)
+    print('one-hot-encoding is complete')
+    df_ver6 = topic_find(df_ver5)
+    print('Title,Tags topic Find is complete')
+    df_ver7 = make_grade_columns(df_ver6) # 등급 매기기
     print('Grade format complete')
-    df_ver6 = col_del(df_ver5) # 불필요한 feature 제거
+    df_ver8 = col_del(df_ver7) # 불필요한 feature 제거
     print('Delete col complete')
+    df_ver9 =df_ver8.dropna()
     
-    
-    return df_ver6
+    return df_ver9
 
 
 def get_video_len(fpath, multi=0):
