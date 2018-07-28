@@ -455,4 +455,48 @@ def SelectKBest(df):
         SFcolumns=X_new.get_support(indices=True)    
 
         print(k ,'등' ,df_.columns[SFcolumns])
+
         
+def topic_find(df):
+    '''
+    DataFrame입력하면, 아래 Topic 워드들이 포함됐는지 원-핫-인코딩을 자동으로 해서
+    새로운 칼럼 생성한 뒤, DataFrame return한다.
+    '''   
+    df_ = df
+    topic_title = ['|','official', 'video', '2018']
+    topic_tags = ['vs', 'new', 'music' ,'you']
+    
+    tp = topic_title
+    col_name = 'title'
+    for num in range(0,2):
+        
+        for i in range(len(df_)):
+            
+            Text = df_.loc[i,col_name]
+            
+            for char in '-.,\n()':
+                Text = Text.replace(char,' ')
+                
+            Text = Text.lower()
+            word_list = Text.split()
+
+            for j in range(len(word_list)):
+
+                if word_list[j] in tp:
+                    df_.loc[i, word_list[j]+'_count'] = 1
+                
+        tp = topic_tags
+        col_name = 'tags'
+        
+        
+    df_temp = df_.iloc[:,-8:]
+    col = df_temp.columns
+    
+    for i in col:
+        temp_col = df_[i]
+        temp_col[temp_col!=1] = 0
+        del df_[i]
+        df_ = pd.concat([df_,temp_col], axis =1)
+    
+    return df_
+    
