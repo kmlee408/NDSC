@@ -500,3 +500,11 @@ def topic_find(df):
     
     return df_
     
+def move_Grade(df):
+    '''
+    Grade 칼럼을 맨 끝으로 보내는 모듈
+    특징: 
+    '''
+    grd = df.copy()['Grade']
+    del df['Grade']
+    df['Grade']=grd
