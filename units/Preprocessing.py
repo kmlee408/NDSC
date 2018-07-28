@@ -12,7 +12,7 @@ import YouTube
 
 import matplotlib.pyplot as plt
 import seaborn as sns
-from textblob import TextBlob
+#from textblob import TextBlob
 
 def _runner_get_duration(yt,vid_list):
     print('Process Started')
@@ -26,13 +26,10 @@ def _runner_get_duration(yt,vid_list):
         _duration.append(_vid_len)
             
     return (_duration, _errors_vid_numbers)
-#-------------------------------------------------------------------------
-def data_format(dataframe):
 
-    '''
-    csv 파일을 dataframe한 df_ver1 을 input함
-    전체 전처리 모듈임 이것만 실행하면 됨
-    '''
+def data_format(dataframe):
+    #csv 파일을 dataframe한 df_ver1 을 input함
+    #전체 전처리 모듈임 이것만 실행하면 됨
     
     dataframe = drop_not_ints(dataframe, 'views')
     dataframe = drop_not_ints(dataframe, 'likes')
@@ -41,17 +38,15 @@ def data_format(dataframe):
     del dataframe['Unnamed: 17']
     del dataframe['Unnamed: 18']
     print('formating....')
-    
+   
     df_ver2 = make_grade_columns(dataframe) # 등급 매기기
     print('Grade format complete')
     df_ver3 = sentiment_analysis(df_ver2 , 'description') # 감정 분석
     print('Sentiment format complete')
     df_ver4 = time_devide(df_ver3) # 시간 6개 구간으로 나눔
     print('Time devide format complete')
-    
+   
     return df_ver4
-
-#--------------------------------------------------------------------------
 
 
 def get_video_len(fpath, multi=0):
@@ -237,7 +232,8 @@ def make_grade_columns(dataframe):
     for vcnt in _dps_cnts_levels:
 
         _et = _st + vcnt
-        df.loc[_st:_et, 'Grade'] = str(Count)+' grade'
+        df.loc[_st:_et, 'Grade'] = Count###+' grade'
+        print(Count)
 
         Count= Count -1
         _st = _et
@@ -251,34 +247,74 @@ def make_graph(dataframe, column_name):
     그럼 그래프랑 등급별 평균 산출됨!
     numeric columns = ['views','likes','dislikes','category_id','comment_count','duration']
     '''
+    _max = max(dataframe[column_name])
+    _min = min(dataframe[column_name])
+
+    scaler = _max - _min 
 
     df_ = dataframe.reset_index()
+    df_[column_name] = df_[column_name] / scaler
     graph = sns.lmplot(data = df_ , x='index', y=column_name, hue ='Grade', fit_reg=False, size= 8)   
     # fit_reg = 회귀선 표기할꺼냐
     # hue = 구분하는 기준을 뭘로 할꺼냐
+
+def get_means(dataframe, column_name):    
     
-    print(column_name + ' Graph')
-    
-    
+    _max = max(dataframe[column_name])
+    _min = min(dataframe[column_name])
+
+    scaler = _max - _min 
+
+    df_ = dataframe.reset_index()
+    df_[column_name] = df_[column_name] / scaler
+
     # 등급별 평균값 산출
-    _pct = [0.04, 0.07, 0.12, 0.17, 0.20, 0.17, 0.12, 0.07]
+    _pct = [0.04, 0.07, 0.12, 0.17, 0.20, 0.17, 0.12, 0.07, 0.04]
     _len=len(dataframe)
     _dps_cnts_levels = [ int(_len * pct) +1 for pct in _pct ]
     
     _st= 0
-    Count = 8
+    Count = 9
+
+    values = []
     for vcnt in _dps_cnts_levels:
         
         _et = _st + vcnt
-        print(Count , ' 등급 별 평균 값 : %d' % (sum(df_.loc[_st:_et,column_name])/(_et-_st)))
+        value = sum(df_.loc[_st:_et, column_name])/(_et-_st)
+        values.append(value)
+        #print(Count , ' 등급 별 평균 값 : %f' % (value))
         Count= Count -1
         _st = _et
     
-    print('\n')
     
-    return graph
-    
+    return values #from 9-1 level of a feature
 
+def make_dt_feats_by_levels(dataframe, feature_names):
+    #feature names : 특성명
+
+    _list_of_values = [] #특성별 리스트
+    for feat in feature_names:
+        _values = get_means(dataframe, feat) #1~9등급까지의 평균값들 리스트
+        _list_of_values.append(_values)
+
+    _len_lv = 9
+    _len_feat = len(feature_names)
+
+    _list_of_values = np.array(_list_of_values)
+
+    print(np.array(_list_of_values).shape)
+
+    dt = pd.DataFrame(_list_of_values, columns = range(9,0,-1), index = feature_names)
+
+    dt['diff(9-1)']=dt[9]-dt[1]
+
+    return dt
+
+
+            
+            
+        
+    
 
 
 def drop_not_ints(dataframe, feat):
@@ -351,3 +387,20 @@ def one_hot_encoding(df,cols):
         df_ = df_.drop(col, axis = 1)
         
     return df_
+
+
+def categorize_dataset_by_grade(dataframe):
+    grades_feature = []
+    for i in range(1,10):
+        grades_feats.append(dataframe['Grade'][:] == i)
+
+    return grades_feats
+
+def get_feature_values_in_grade(dataframe, feature, grade):
+    grades_feats = categorize_dataset_by_grade(dataframe)
+    
+    ret_values = np.array(grades_feats[grade-1][feature])
+
+    return ret_values
+
+
