@@ -129,7 +129,7 @@ def merge_data():
 
     _pieces = []
     for fn in _file_names:
-        df = pd.read_csv(_dir+fn+'.csv')
+        df = pd.read_csv(_dir+fn+'_ver1.csv')
         print(fn +  ' ' + 'transfer to DataFrame')
         _pieces.append(df)
 
@@ -394,7 +394,6 @@ def one_hot_encoding(df,cols):
         
     return df_
 
-<<<<<<< HEAD
 
 def categorize_dataset_by_grade(dataframe):
     grades_feature = []
@@ -410,8 +409,6 @@ def get_feature_values_in_grade(dataframe, feature, grade):
 
     return ret_values
 
-
-=======
 def col_del(df):
     
     df_=df
@@ -425,4 +422,3 @@ def col_del(df):
             continue
             
     return df_
->>>>>>> 3fd51681fe5ff6e78e92a13afc87667c3d7d8bf5
