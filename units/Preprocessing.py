@@ -516,3 +516,34 @@ def move_Grade(df):
     grd = df.copy()['Grade']
     del df['Grade']
     df['Grade']=grd
+    
+def word_find(df,col)
+    '''
+    DataFrame과 column명을 써넣으면 그 column에 가장 많이 나온 단어 추출함
+    '''
+    df_=df
+    tp = df_[col]
+    word_freq = []
+    str_ =''
+    for i in range(len(tp)):
+        str_ = str_ + tp[i]
+
+
+    Text = str_
+    for char in '-.,\n()':
+        Text = Text.replace(char,' ')
+
+    Text = Text.lower()
+    word_list = Text.split()
+
+    d= {}
+    for word in word_list:
+        d[word] = d.get(word, 0) +1
+
+
+    for key, value in d.items():
+        word_freq.append((value,key))
+
+    word_freq.sort(reverse = True )
+    
+    return word_freq
