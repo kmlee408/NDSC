@@ -324,11 +324,6 @@ def make_dt_feats_by_levels(dataframe, feature_names):
     dt['diff(9-1)']=dt[9]-dt[1]
 
     return dt
-
-
-            
-            
-        
     
 
 
