@@ -12,7 +12,7 @@ import YouTube
 
 import matplotlib.pyplot as plt
 import seaborn as sns
-#from textblob import TextBlob
+from textblob import TextBlob
 
 def _runner_get_duration(yt,vid_list):
     print('Process Started')
