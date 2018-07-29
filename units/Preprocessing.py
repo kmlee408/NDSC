@@ -47,13 +47,21 @@ def data_format(dataframe):
     print('Sentiment format complete')
     df_ver4 = time_devide(df_ver3) # 시간 6개 구간으로 나눔
     print('Time devide format complete')
-    df_ver5 = make_grade_columns(df_ver4) # 등급 매기기
+    
+    cols =['category_id','publish_time_devide']
+    df_ver5 = one_hot_encoding(df_ver4, cols) # 원 핫 인코딩
+    print('one-hot-encoding is complete')
+    df_ver6 = topic_find(df_ver5) # 제목이랑 태그에서 키워드 추출
+    print('Title,Tags topic Find is complete')
+    df_ver7 = make_grade_columns(df_ver6) # 등급 매기기
     print('Grade format complete')
-    df_ver6 = col_del(df_ver5) # 불필요한 feature 제거
+    
+    #cleaning data
+    df_ver8 = col_del(df_ver7) # 불필요한 feature 제거
     print('Delete col complete')
+    df_ver9 =df_ver8.dropna() #nan 
     
-    
-    return df_ver6
+    return df_ver9
 
 
 def get_video_len(fpath, multi=0):
@@ -455,4 +463,87 @@ def SelectKBest(df):
         SFcolumns=X_new.get_support(indices=True)    
 
         print(k ,'등' ,df_.columns[SFcolumns])
+
         
+def topic_find(df):
+    '''
+    DataFrame입력하면, 아래 Topic 워드들이 포함됐는지 원-핫-인코딩을 자동으로 해서
+    새로운 칼럼 생성한 뒤, DataFrame return한다.
+    '''   
+    df_ = df
+    topic_title = ['|','official', 'video', '2018']
+    topic_tags = ['vs', 'new', 'music' ,'you']
+    
+    tp = topic_title
+    col_name = 'title'
+    for num in range(0,2):
+        
+        for i in range(len(df_)):
+            
+            Text = df_.loc[i,col_name]
+            
+            for char in '-.,\n()':
+                Text = Text.replace(char,' ')
+                
+            Text = Text.lower()
+            word_list = Text.split()
+
+            for j in range(len(word_list)):
+
+                if word_list[j] in tp:
+                    df_.loc[i, word_list[j]+'_count'] = 1
+                
+        tp = topic_tags
+        col_name = 'tags'
+        
+        
+    df_temp = df_.iloc[:,-8:]
+    col = df_temp.columns
+    
+    for i in col:
+        temp_col = df_[i]
+        temp_col[temp_col!=1] = 0
+        del df_[i]
+        df_ = pd.concat([df_,temp_col], axis =1)
+    
+    return df_
+    
+def move_Grade(df):
+    '''
+    Grade 칼럼을 맨 끝으로 보내는 모듈
+    특징: 
+    '''
+    grd = df.copy()['Grade']
+    del df['Grade']
+    df['Grade']=grd
+    
+def word_find(df,col)
+    '''
+    DataFrame과 column명을 써넣으면 그 column에 가장 많이 나온 단어 추출함
+    '''
+    df_=df
+    tp = df_[col]
+    word_freq = []
+    str_ =''
+    for i in range(len(tp)):
+        str_ = str_ + tp[i]
+
+
+    Text = str_
+    for char in '-.,\n()':
+        Text = Text.replace(char,' ')
+
+    Text = Text.lower()
+    word_list = Text.split()
+
+    d= {}
+    for word in word_list:
+        d[word] = d.get(word, 0) +1
+
+
+    for key, value in d.items():
+        word_freq.append((value,key))
+
+    word_freq.sort(reverse = True )
+    
+    return word_freq
